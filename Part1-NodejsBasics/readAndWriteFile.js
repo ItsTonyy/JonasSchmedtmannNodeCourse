@@ -1,4 +1,4 @@
-const fs = require('fs');
+import * as fs from 'node:fs';
 
 // Blocking, Synchronous Way
 const textIn = fs.readFileSync('./starter/txt/input.txt', 'utf-8');
@@ -9,7 +9,7 @@ fs.writeFileSync('./starter/txt/input.txt', textOut);
 //console.log('file written!')
 
 // Non-blocking, Asynchronous way
-fs.readFile('./starter/txt/starttttt.txt', 'utf-8', (err, data1) => {
+fs.readFile('./starter/txt/start.txt', 'utf-8', (err, data1) => {
   if (err) return console.log('Error!');
   fs.readFile(`./starter/txt/${data1}.txt`, 'utf-8', (err, data2) => {
     if (err) return console.log('Error!');
