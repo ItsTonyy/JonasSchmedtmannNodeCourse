@@ -2,6 +2,8 @@ import http from 'node:http';
 import url from 'node:url';
 import * as fs from 'node:fs';
 
+const slugify = require('slugify');
+
 const templateOverview = fs.readFileSync('./starter/templates/template-overview.html', 'utf-8');
 const templateProduct = fs.readFileSync('./starter/templates/template-product.html', 'utf-8');
 const templateCard = fs.readFileSync('./starter/templates/template-card.html', 'utf-8');
@@ -28,7 +30,6 @@ const replaceTemplate = (template, product) => {
 
 const server = http.createServer((req, res) => {
   const {query, pathname} = url.parse(req.url, true)
-
 
   //Overview Page
   if (pathname === '/' || pathname === '/overview') {
