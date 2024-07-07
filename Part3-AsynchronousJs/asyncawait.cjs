@@ -18,23 +18,20 @@ const writeFilePro = (file, data) => {
       if (err) {
         reject('❌ Error: Could not write file.');
       }
-      resolve('File Written Successfully');
-    }); 
+      resolve();
+    });
   });
 };
 
-readFilePro(`${__dirname}/dog.txt`)
-  .then((data) => {
-    console.log(`breed: ${data}`);
-    return superagent.get(`https://dog.ceo/api/breed/${data}/images/random`);
-  })
-  .then((res) => {
-    console.log('image received: ', res.body.message);
-    writeFilePro('dog-img.txt', res.body.message); 
-  })
-  .then(() => {
-    console.log('Random dog image save to file.')
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+const getDogPic = async () => {
+  const dogName = await readFilePro(`${__dirname}/dog.txt`);
+  console.log(`breed: ${dogName}`);
+
+  const image = await superagent.get(`https://dog.ceo/api/breed/${dogName}/images/random`);
+  console.log('image received: ', image.body.message);
+
+  await writeFilePro('dog-img.txt', image.body.message)
+  .then(console.log('File Written Successfully!'))
+};
+
+getDogPic()
