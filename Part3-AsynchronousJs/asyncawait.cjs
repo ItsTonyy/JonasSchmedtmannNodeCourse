@@ -24,14 +24,17 @@ const writeFilePro = (file, data) => {
 };
 
 const getDogPic = async () => {
-  const dogName = await readFilePro(`${__dirname}/dog.txt`);
-  console.log(`breed: ${dogName}`);
+  try {
+    const dogName = await readFilePro(`${__dirname}/dog.txt`);
+    console.log(`breed: ${dogName}`);
 
-  const image = await superagent.get(`https://dog.ceo/api/breed/${dogName}/images/random`);
-  console.log('image received: ', image.body.message);
+    const image = await superagent.get(`https://dog.ceo/api/breed/${dogName}/images/random`);
+    console.log('image received: ', image.body.message);
 
-  await writeFilePro('dog-img.txt', image.body.message)
-  .then(console.log('File Written Successfully!'))
+    await writeFilePro('dog-img.txt', image.body.message).then(console.log('File Written Successfully!'));
+  } catch (error) {
+    console.log('Error in getDogPic function: ', error);
+  }
 };
 
-getDogPic()
+getDogPic();
