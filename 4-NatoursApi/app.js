@@ -28,6 +28,26 @@ app.get('/api/v1/tours', (req, res) => {
   });
 });
 
+app.get('/api/v1/tours/:id', (req, res) => {
+  const id = req.params.id * 1;
+
+  if (id > tours.length - 1) {
+    res.status(404);
+    res.json({
+      status: 'fail',
+      message: `can't find tour with id of ${id}`,
+    });
+  }
+
+  res.status(200);
+  res.json({
+    status: 'success',
+    data: {
+      tour: tours[id],
+    },
+  });
+});
+
 app.post('/api/v1/tours', (req, res) => {
   const newId = tours[tours.length - 1].id + 1;
   const newTour = Object.assign({ id: newId }, req.body);
@@ -35,14 +55,14 @@ app.post('/api/v1/tours', (req, res) => {
   tours.push(newTour);
 
   fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), (err) => {
-    res.status(201)
+    res.status(201);
     res.json({
       status: 'success',
       data: {
-        tour: newTour
-      }
-    })
-  })
+        tour: newTour,
+      },
+    });
+  });
 });
 
 app.listen(port, () => {
