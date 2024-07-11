@@ -6,18 +6,9 @@ const port = 3000;
 
 app.use(express.json());
 
-//app.get('/', (req, res) => {
-//  res.status(202);
-//  res.json({ message: 'Hello from the server side!', app: 'Natours' });
-//});
-//
-//app.post('/', (req, res) => {
-//  res.send('You can post to this endpoint')
-//})
-
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
 
-app.get('/api/v1/tours', (req, res) => {
+const getAllTours = (req, res) => {
   res.status(200);
   res.json({
     status: 'success',
@@ -26,9 +17,9 @@ app.get('/api/v1/tours', (req, res) => {
       tours: tours,
     },
   });
-});
+};
 
-app.get('/api/v1/tours/:id', (req, res) => {
+const getTourByid = (req, res) => {
   const id = req.params.id * 1;
 
   if (id > tours.length - 1) {
@@ -46,9 +37,9 @@ app.get('/api/v1/tours/:id', (req, res) => {
       tour: tours[id],
     },
   });
-});
+}
 
-app.post('/api/v1/tours', (req, res) => {
+const createTour = (req, res) => {
   const newId = tours[tours.length - 1].id + 1;
   const newTour = Object.assign({ id: newId }, req.body);
 
@@ -63,7 +54,55 @@ app.post('/api/v1/tours', (req, res) => {
       },
     });
   });
-});
+}
+
+const uptadeTour = (req, res) => {
+  const id = req.params.id * 1;
+
+  if (id > tours.length - 1) {
+    res.status(404);
+    res.json({
+      status: 'fail',
+      message: `can't find tour with id of ${id}`,
+    });
+  }
+
+  res.status(200);
+  res.json({
+    status: 'success',
+    data: {
+      tour: '<updated tour here>',
+    },
+  });
+}
+
+const deleteTour = (req, res) => {
+  const id = req.params.id * 1;
+
+  if (id > tours.length - 1) {
+    res.status(404);
+    res.json({
+      status: 'fail',
+      message: `can't find tour with id of ${id}`,
+    });
+  }
+
+  res.status(204);
+  res.json({
+    status: 'success',
+    data: null,
+  });
+}
+
+app.get('/api/v1/tours', getAllTours);
+
+app.get('/api/v1/tours/:id', getTourByid);
+
+app.post('/api/v1/tours', createTour);
+
+app.patch('/api/v1/tours/:id', uptadeTour);
+
+app.delete('/api/v1/tours/:id', deleteTour);
 
 app.listen(port, () => {
   console.log(`app running on port ${port}...`);
